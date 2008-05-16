@@ -14,30 +14,22 @@ import z3c.form.form
 import z3c.form.field
 import z3c.form.widget
 import z3c.form.browser.radio
+import z3c.form.browser.checkbox
 
 from z3c.formwidget.query import MessageFactory as _
 
 class QueryTerms(SimpleVocabulary):
     zope.interface.implements(ITerms)
     
-    def __init__(self, values):
-        terms = [ITitledTokenizedTerm.providedBy(value) and value or \
-                 ITitledTokenizedTerm(value) for value in values]
-
+    def __init__(self, terms):
         super(QueryTerms, self).__init__(terms)
 
     def getTerm(self, value):
-        try:
-            return self.by_value[value]
-        except KeyError:
-            raise LookupError(value)
-
+        return self.by_value[value]
+        
     def getValue(self, token):
-        try:
-            return self.by_token[token]
-        except KeyError:
-            raise LookupError(token)
-
+        return self.by_token[token].value
+        
 class QuerySubForm(z3c.form.form.Form):
     zope.interface.implements(z3c.form.interfaces.ISubForm)
 
@@ -61,9 +53,18 @@ class QuerySubForm(z3c.form.form.Form):
 class QueryContext(object):
     query = None
 
-class QuerySourceWidget(z3c.form.browser.radio.RadioWidget):
+class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
+    """Query source widget that allows single selection."""
+    
     _queryform = None
     _resultsform = None
+
+    def isChecked(self, term):
+        return term.value in self.selection or term.token in self.value
+
+    @property
+    def source(self):
+        return self.field.source
 
     def update(self):
         # setup query form
@@ -78,7 +79,7 @@ class QuerySourceWidget(z3c.form.browser.radio.RadioWidget):
 
         # query source
         query = data['query']
-        source = self.field.source
+        source = self.source
 
         if IContextSourceBinder.providedBy(source):
             source = source(self.context)
@@ -86,28 +87,73 @@ class QuerySourceWidget(z3c.form.browser.radio.RadioWidget):
         assert ISource.providedBy(source)
 
         if query is not None:
-            results = source.search(query)
+            terms = set(source.search(query))
         else:
-            results = ()
-            
-        # set terms
-        self.terms = QueryTerms(results)
+            terms = set()
 
-                # update widget
-        super(QuerySourceWidget, self).update()
+        # add current selection
+        selection = zope.component.getMultiAdapter(
+            (self.context, self.field), z3c.form.interfaces.IDataManager).get()
+
+        if not isinstance(selection, (tuple, set, list)):
+            selection = (selection,)
+
+        values = [term.value for term in terms]
+
+        map(terms.add,
+            map(source.getTermByValue,
+                filter(lambda value: value and value not in values, selection)))
+        
+        self.selection = selection
+
+        # set terms
+        self.terms = QueryTerms(terms)
+
+        # filter on extracted data
+        value = self.extract()
+        if value is not z3c.form.interfaces.NOVALUE:
+            self.selection = map(self.terms.getValue, value)
+
+        # update widget
+        self.updateQueryWidget()
+
+    def updateQueryWidget(self):
+        z3c.form.browser.radio.RadioWidget.update(self)
+
+    def renderQueryWidget(self):
+        return z3c.form.browser.radio.RadioWidget.render(self)
         
     def render(self):
         subform = self.subform
         if self.terms:
-            return "\n".join((subform.render(), super(QuerySourceWidget, self).render()))
+            return "\n".join((subform.render(), self.renderQueryWidget()))
 
         return subform.render()
 
     def __call__(self):
         self.update()
         return self.render()
+
+class QuerySourceCheckboxWidget(
+    QuerySourceRadioWidget, z3c.form.browser.checkbox.CheckBoxWidget):
+    """Query source widget that allows multiple selections."""
     
-@zope.component.adapter(zope.schema.interfaces.IChoice, z3c.form.interfaces.IFormLayer)
+    zope.interface.implementsOnly(z3c.form.interfaces.ICheckBoxWidget)
+
+    @property
+    def source(self):
+        return self.field.value_type.source
+
+    def updateQueryWidget(self):
+        z3c.form.browser.checkbox.CheckBoxWidget.update(self)
+
+    def renderQueryWidget(self):
+        return z3c.form.browser.checkbox.CheckBoxWidget.render(self)
+
 @zope.interface.implementer(z3c.form.interfaces.IFieldWidget)
-def QuerySourceFieldWidget(field, request):
-    return z3c.form.widget.FieldWidget(field, QuerySourceWidget(request))
+def QuerySourceFieldRadioWidget(field, request):
+    return z3c.form.widget.FieldWidget(field, QuerySourceRadioWidget(request))
+
+@zope.interface.implementer(z3c.form.interfaces.IFieldWidget)
+def QuerySourceFieldCheckboxWidget(field, request):
+    return z3c.form.widget.FieldWidget(field, QuerySourceCheckboxWidget(request))
