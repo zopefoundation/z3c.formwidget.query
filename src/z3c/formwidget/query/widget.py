@@ -13,25 +13,26 @@ import z3c.form.button
 import z3c.form.form
 import z3c.form.field
 import z3c.form.widget
+import z3c.form.term
 import z3c.form.browser.radio
 import z3c.form.browser.checkbox
 
 from z3c.formwidget.query import MessageFactory as _
 
-class QueryTerms(SimpleVocabulary):
-    zope.interface.implements(ITerms)
+class QueryTerms(z3c.form.term.Terms):
     
-    def __init__(self, terms):
-        super(QueryTerms, self).__init__(terms)
-
-    def getTerm(self, value):
-        return self.by_value[value]
+    def __init__(self, context, request, form, field, widget, terms):
+        self.context = context
+        self.request = request
+        self.form = form
+        self.field = field
+        self.widget = widget
         
-    def getValue(self, token):
-        return self.by_token[token].value
-        
+        self.terms = SimpleVocabulary(terms)
+            
 class QuerySubForm(z3c.form.form.Form):
     zope.interface.implements(z3c.form.interfaces.ISubForm)
+    css_class = 'querySelectSearch'
 
     fields = z3c.form.field.Fields(
         zope.schema.TextLine(
@@ -67,6 +68,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         return self.field.source
 
     def update(self):
+        
         # setup query form
         prefix = self.name
         
@@ -91,23 +93,33 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         else:
             terms = set()
 
-        # add current selection
+        values = set([term.token for term in terms])
+        tokens = set([term.value for term in terms])
+
+        # Add current selection (a value) to terms
         selection = zope.component.getMultiAdapter(
             (self.context, self.field), z3c.form.interfaces.IDataManager).get()
 
         if not isinstance(selection, (tuple, set, list)):
             selection = (selection,)
 
-        values = [term.value for term in terms]
-
-        map(terms.add,
-            map(source.getTermByValue,
-                filter(lambda value: value and value not in values, selection)))
-        
         self.selection = selection
 
+        for value in selection:
+            if value and value not in values:
+                terms.add(source.getTerm(value))
+
+        # Add tokens in the request to terms
+        request_values = self.request.get(self.name, [])
+        if not isinstance(request_values, (tuple, set, list)):
+            request_values = (request_values,)
+
+        for token in request_values:
+            if token and token not in tokens:
+                terms.add(source.getTermByToken(token))
+
         # set terms
-        self.terms = QueryTerms(terms)
+        self.terms = QueryTerms(self.context, self.request, self.form, self.field, self, terms)
 
         # filter on extracted data
         value = self.extract()

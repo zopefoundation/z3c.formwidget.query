@@ -39,9 +39,8 @@ To make things simple, we'll just use unicode strings as values.
   ...
   ...     __contains__ = vocabulary.__contains__
   ...     __iter__ = vocabulary.__iter__
-  ...
-  ...     def getTermByValue(self, value):
-  ...         return self.vocabulary.by_value[value]
+  ...     getTerm = vocabulary.getTerm
+  ...     getTermByToken = vocabulary.getTermByToken
   ...
   ...     def search(self, query_string):
   ...         return [v for v in self if query_string.lower() in v.value.lower()]
