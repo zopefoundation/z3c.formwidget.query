@@ -3,9 +3,7 @@ import zope.interface
 import zope.schema
 import zope.schema.interfaces
 
-from zope.app.form.browser.interfaces import ITerms
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.schema.interfaces import ITitledTokenizedTerm
 from zope.schema.interfaces import ISource, IContextSourceBinder
 
 import z3c.form.interfaces
@@ -18,6 +16,17 @@ import z3c.form.browser.radio
 import z3c.form.browser.checkbox
 
 from z3c.formwidget.query import MessageFactory as _
+
+class SourceTerms(z3c.form.term.Terms):
+    
+    def __init__(self, context, request, form, field, widget, source):
+        self.context = context
+        self.request = request
+        self.form = form
+        self.field = field
+        self.widget = widget
+        
+        self.terms = source
 
 class QueryTerms(z3c.form.term.Terms):
     
@@ -60,74 +69,91 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
     _queryform = None
     _resultsform = None
 
-    def isChecked(self, term):
-        return term.value in self.selection or term.token in self.value
-
     @property
     def source(self):
         return self.field.source
 
     def update(self):
         
-        # setup query form
-        prefix = self.name
+        # Allow the source to provide terms until we have more specific ones
+        # from the query. Things do not go well if self.terms is None
+
+        source = self.source
         
-        subform = self.subform = QuerySubForm(QueryContext(), self.request, prefix)
+        if IContextSourceBinder.providedBy(source):
+            source = source(self.context)
+
+        assert ISource.providedBy(source)
+        
+        self.terms = SourceTerms(self.context, self.request, self.form, self.field, self, source)
+
+        # Set up query form
+
+        subform = self.subform = QuerySubForm(QueryContext(), self.request, self.name)
         subform.update()
 
         data, errors = subform.extractData()
         if errors:
             return
 
-        # query source
+        # Perform the search
+
         query = data['query']
-        source = self.source
-
-        if IContextSourceBinder.providedBy(source):
-            source = source(self.context)
-
-        assert ISource.providedBy(source)
-
         if query is not None:
             terms = set(source.search(query))
         else:
             terms = set()
+        
+        # If we have values in the request, add these to the terms. 
+        # Otherwise, take tha value from
+        # the current saved value.
 
-        values = set([term.token for term in terms])
-        tokens = set([term.value for term in terms])
+        request_values = self.extract(default=z3c.form.interfaces.NOVALUE)
+        if request_values is not z3c.form.interfaces.NOVALUE:
+            if not isinstance(request_values, (tuple, set, list)):
+                request_values = (request_values,)
 
-        # Add current selection (a value) to terms
-        selection = zope.component.getMultiAdapter(
-            (self.context, self.field), z3c.form.interfaces.IDataManager).get()
+            tokens = set([term.value for term in terms])
+            for token in request_values:
+                if token and token not in tokens:
+                    term = source.getTermByToken(token)
+                    terms.add(term)
+        else:
+            selection = zope.component.getMultiAdapter(
+                (self.context, self.field), z3c.form.interfaces.IDataManager).get()
 
-        if not isinstance(selection, (tuple, set, list)):
-            selection = (selection,)
-
-        self.selection = selection
-
-        for value in selection:
-            if value and value not in values:
-                terms.add(source.getTerm(value))
-
-        # Add tokens in the request to terms
-        request_values = self.request.get(self.name, [])
-        if not isinstance(request_values, (tuple, set, list)):
-            request_values = (request_values,)
-
-        for token in request_values:
-            if token and token not in tokens:
-                terms.add(source.getTermByToken(token))
-
+            if not isinstance(selection, (tuple, set, list)):
+                selection = [selection]
+            
+            values = set([term.token for term in terms])
+            for value in selection:
+                if value and value not in values:
+                    terms.add(source.getTerm(value))
+        
         # set terms
         self.terms = QueryTerms(self.context, self.request, self.form, self.field, self, terms)
 
-        # filter on extracted data
-        value = self.extract()
-        if value is not z3c.form.interfaces.NOVALUE:
-            self.selection = map(self.terms.getValue, value)
-
-        # update widget
+        # update widget - will set self.value
         self.updateQueryWidget()
+
+    def extract(self, default=z3c.form.interfaces.NOVALUE):
+        value = self.extractQueryWidget(default)
+        if value is z3c.form.interfaces.NOVALUE:
+            return value
+        elif len(value) == 0:
+            return default
+        else:
+            return value
+        
+    def render(self):
+        subform = self.subform
+        return "\n".join((subform.render(), self.renderQueryWidget()))
+
+    def __call__(self):
+        self.update()
+        return self.render()
+
+    # For subclasses to override
 
     def updateQueryWidget(self):
         z3c.form.browser.radio.RadioWidget.update(self)
@@ -135,16 +161,8 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
     def renderQueryWidget(self):
         return z3c.form.browser.radio.RadioWidget.render(self)
         
-    def render(self):
-        subform = self.subform
-        if self.terms:
-            return "\n".join((subform.render(), self.renderQueryWidget()))
-
-        return subform.render()
-
-    def __call__(self):
-        self.update()
-        return self.render()
+    def extractQueryWidget(self, default=z3c.form.interfaces.NOVALUE):
+        return z3c.form.browser.radio.RadioWidget.extract(self, default)
 
 class QuerySourceCheckboxWidget(
     QuerySourceRadioWidget, z3c.form.browser.checkbox.CheckBoxWidget):
@@ -161,6 +179,9 @@ class QuerySourceCheckboxWidget(
 
     def renderQueryWidget(self):
         return z3c.form.browser.checkbox.CheckBoxWidget.render(self)
+    
+    def extractQueryWidget(self, default=z3c.form.interfaces.NOVALUE):
+        return z3c.form.browser.checkbox.CheckBoxWidget.extract(self, default)
 
 @zope.interface.implementer(z3c.form.interfaces.IFieldWidget)
 def QuerySourceFieldRadioWidget(field, request):
