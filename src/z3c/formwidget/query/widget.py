@@ -68,23 +68,30 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
     
     _queryform = None
     _resultsform = None
+    _bound_source = None
 
     @property
     def source(self):
         return self.field.source
+        
+    @property
+    def bound_source(self):
+        if self._bound_source is None:
+            source = self.source
+            if IContextSourceBinder.providedBy(source):
+                source = source(self.context)
+            assert ISource.providedBy(source)
+            self._bound_source = source
+        return self._bound_source
 
     def update(self):
         
         # Allow the source to provide terms until we have more specific ones
         # from the query. Things do not go well if self.terms is None
 
-        source = self.source
-        
-        if IContextSourceBinder.providedBy(source):
-            source = source(self.context)
+        self._bound_source = None
+        source = self.bound_source
 
-        assert ISource.providedBy(source)
-        
         self.terms = SourceTerms(self.context, self.request, self.form, self.field, self, source)
 
         # Set up query form
