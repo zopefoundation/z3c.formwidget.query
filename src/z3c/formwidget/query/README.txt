@@ -84,7 +84,6 @@ Let's begin with a single selection.
   ...     city = None
   
   >>> location = Location()
-  >>> field = city.bind(location)
 
   >>> from z3c.formwidget.query.widget import QuerySourceFieldRadioWidget
 
@@ -99,7 +98,7 @@ Let's begin with a single selection.
 
 An empty query is not carried out.
   
-  >>> widget = setupWidget(field, location, request)
+  >>> widget = setupWidget(city, location, request)
   >>> 'type="radio"' in widget()
   False
 
@@ -107,7 +106,7 @@ Let's choose a city:
 
   >>> location.city = u"Palermo"
 
-  >>> widget = setupWidget(field, location, request)
+  >>> widget = setupWidget(city, location, request)
 
 We now expect a radio button to be present.
   
@@ -119,7 +118,7 @@ We can put a query string in the request, and have our source queried.
   >>> request = TestRequest(form={
   ...     'city.widgets.query': u'bologna'})
   
-  >>> widget = setupWidget(field, location, request)
+  >>> widget = setupWidget(city, location, request)
 
 Verify results:
   
@@ -135,7 +134,7 @@ Selecting 'Bologna' from the list should check the corresponding box.
   ...     'city.widgets.query': u'bologna',
   ...     'city': ('bologna',)})
 
-  >>> widget = setupWidget(field, location, request)
+  >>> widget = setupWidget(city, location, request)
 
   >>> 'checked="checked"' in widget()
   True
@@ -154,11 +153,10 @@ Now we want to try out selection of multiple items.
   ...     cities = ()
   
   >>> route = Route()
-  >>> field = cities.bind(route)
 
   >>> from z3c.formwidget.query.widget import QuerySourceFieldCheckboxWidget
 
-  >>> def setupWidget(field, context, request):
+  >>> def setupMultiWidget(field, context, request):
   ...     widget = QuerySourceFieldCheckboxWidget(field, request)
   ...     widget.name = field.__name__
   ...     widget.context = context
@@ -168,7 +166,7 @@ Now we want to try out selection of multiple items.
   
 An empty query is not carried out.
   
-  >>> widget = setupWidget(field, route, request)
+  >>> widget = setupMultiWidget(cities, route, request)
   >>> 'type="checkbox"' in widget()
   False
 
@@ -176,7 +174,7 @@ Let's set a city on the route:
 
   >>> route.cities = (u"Palermo",)
 
-  >>> widget = setupWidget(field, route, request)
+  >>> widget = setupMultiWidget(cities, route, request)
   >>> 'type="checkbox"' in widget()
   True
   
@@ -185,7 +183,7 @@ Let's make a query for "bologna".
   >>> request = TestRequest(form={
   ...     'cities.widgets.query': u'bologna'})
   
-  >>> widget = setupWidget(field, route, request)
+  >>> widget = setupMultiWidget(cities, route, request)
 
 Verify results:
 
@@ -201,7 +199,7 @@ We'll select 'Bologna' from the list.
   ...     'cities.widgets.query': u'bologna',
   ...     'cities': ('bologna',)})
 
-  >>> widget = setupWidget(field, route, request)
+  >>> widget = setupMultiWidget(cities, route, request)
 
 Verify that Bologna has been selected.
 
@@ -214,7 +212,7 @@ context. We'll submit an empty tuple.
   >>> request = TestRequest(form={
   ...     'cities': ()})
 
-  >>> widget = setupWidget(field, route, request)
+  >>> widget = setupMultiWidget(cities, route, request)
 
 We expect an unchecked box.
 
@@ -223,6 +221,51 @@ We expect an unchecked box.
   
   >>> 'checked="checked"' in widget()
   False
+
+Named Sources
+-------------
+
+We can also provide a data source using named vocabularies.  First we register
+our source as a named vocabulary::
+
+  >>> from zope.schema.interfaces import IVocabularyFactory
+  >>> from zope.schema.vocabulary import getVocabularyRegistry
+  >>> vr = getVocabularyRegistry()
+  >>> vr.register(u'test vocabulary name', ItalianCities)
+  >>> city2 = zope.schema.Choice(
+  ...     __name__='city',
+  ...     title=u'City',
+  ...     description=u'Select a city.',
+  ...     vocabulary=u'test vocabulary name')
+  >>> request = TestRequest(form={
+  ...     'city.widgets.query': u'bologna',
+  ...     'city': ('bologna',)})
+  >>> location = Location()
+  >>> widget = setupWidget(city2, location, request)
+  >>> 'Bologna' in widget()
+  True
+  >>> 'Palermo' in widget()
+  False
+
+The same is true of multi-select widgets::
+
+  >>> cities2 = zope.schema.Set(
+  ...     __name__='cities',
+  ...     title=u'Cities',
+  ...     description=u'Select one or more cities.',
+  ...     value_type=zope.schema.Choice(
+  ...        vocabulary=u'test vocabulary name' 
+  ...     ))
+  >>> route = Route()
+  >>> request = TestRequest(form={
+  ...     'cities.widgets.query': u'bologna',
+  ...     'cities': ('bologna',)})
+  >>> widget = setupMultiWidget(cities2, route, request)
+  >>> 'Bologna' in widget()
+  True
+  >>> 'Palermo' in widget()
+  False
+
 
 Todo
 ----

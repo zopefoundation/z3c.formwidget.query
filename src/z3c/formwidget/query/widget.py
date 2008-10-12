@@ -72,8 +72,10 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
 
     @property
     def source(self):
-        return self.field.source
-        
+        """We need to bind the field to the context so that vocabularies
+        appear as sources"""
+        return self.field.bind(self.context).source
+
     @property
     def bound_source(self):
         if self._bound_source is None:
@@ -179,7 +181,7 @@ class QuerySourceCheckboxWidget(
 
     @property
     def source(self):
-        return self.field.value_type.source
+        return self.field.bind(self.context).value_type.source
 
     def updateQueryWidget(self):
         z3c.form.browser.checkbox.CheckBoxWidget.update(self)
