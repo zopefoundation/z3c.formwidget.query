@@ -127,7 +127,9 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 if token and token not in tokens:
                     term = source.getTermByToken(token)
                     terms.add(term)
-        else:
+
+        elif not self.ignoreContext:
+            
             selection = zope.component.getMultiAdapter(
                 (self.context, self.field), z3c.form.interfaces.IDataManager).get()
 
