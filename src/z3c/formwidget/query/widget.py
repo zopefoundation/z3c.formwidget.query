@@ -66,9 +66,12 @@ class QueryContext(object):
 class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
     """Query source widget that allows single selection."""
     
+    _radio = True
     _queryform = None
     _resultsform = None
     _bound_source = None
+
+    noValueLabel = _(u'(nothing)')
 
     @property
     def source(self):
@@ -104,7 +107,8 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             if not isinstance(request_values, (tuple, set, list)):
                 request_values = (request_values,)
 
-            terms = set([source.getTermByToken(token) for token in request_values if token])
+            terms = set([source.getTermByToken(token) for token in request_values 
+                            if token and token != self.noValueToken])
 
         elif not self.ignoreContext:
             
@@ -141,6 +145,16 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         # update widget - will set self.value
         self.updateQueryWidget()
 
+        # add "novalue" option
+        if self._radio and not self.required:
+            self.items.insert(0, {
+                'id': self.id + '-novalue',
+                'name': self.name + ':list',
+                'value': self.noValueToken,
+                'label': self.noValueLabel,
+                'checked': not self.value or self.value[0] == self.noValueToken,
+                })
+
     def extract(self, default=z3c.form.interfaces.NOVALUE):
         value = self.extractQueryWidget(default)
         if value is z3c.form.interfaces.NOVALUE:
@@ -174,6 +188,8 @@ class QuerySourceCheckboxWidget(
     """Query source widget that allows multiple selections."""
     
     zope.interface.implementsOnly(z3c.form.interfaces.ICheckBoxWidget)
+
+    _radio = False
 
     @property
     def source(self):
