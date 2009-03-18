@@ -95,6 +95,26 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         source = self.bound_source
 
         self.terms = SourceTerms(self.context, self.request, self.form, self.field, self, source)
+        
+        # If we have values in the request, use these to get the terms.
+        # Otherwise, take the value from the current saved value.
+
+        request_values = self.extract(default=z3c.form.interfaces.NOVALUE)
+        if request_values is not z3c.form.interfaces.NOVALUE:
+            if not isinstance(request_values, (tuple, set, list)):
+                request_values = (request_values,)
+
+            terms = set([source.getTermByToken(token) for token in request_values if token])
+
+        elif not self.ignoreContext:
+            
+            selection = zope.component.getMultiAdapter(
+                (self.context, self.field), z3c.form.interfaces.IDataManager).get()
+
+            if not isinstance(selection, (tuple, set, list)):
+                selection = [selection]
+            
+            terms = set([source.getTerm(value) for value in selection if value])
 
         # Set up query form
 
@@ -105,41 +125,15 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         if errors:
             return
 
-        # Perform the search
+        # perform the search
 
         query = data['query']
         if query is not None:
-            terms = set(source.search(query))
-        else:
-            terms = set()
-        
-        # If we have values in the request, add these to the terms. 
-        # Otherwise, take tha value from
-        # the current saved value.
-
-        request_values = self.extract(default=z3c.form.interfaces.NOVALUE)
-        if request_values is not z3c.form.interfaces.NOVALUE:
-            if not isinstance(request_values, (tuple, set, list)):
-                request_values = (request_values,)
-
-            tokens = set([term.value for term in terms])
-            for token in request_values:
-                if token and token not in tokens:
-                    term = source.getTermByToken(token)
+            query_terms = set(source.search(query))
+            tokens = set([term.token for term in terms])
+            for term in query_terms:
+                if term.token not in tokens:
                     terms.add(term)
-
-        elif not self.ignoreContext:
-            
-            selection = zope.component.getMultiAdapter(
-                (self.context, self.field), z3c.form.interfaces.IDataManager).get()
-
-            if not isinstance(selection, (tuple, set, list)):
-                selection = [selection]
-            
-            values = set([term.token for term in terms])
-            for value in selection:
-                if value and value not in values:
-                    terms.add(source.getTerm(value))
         
         # set terms
         self.terms = QueryTerms(self.context, self.request, self.form, self.field, self, terms)
