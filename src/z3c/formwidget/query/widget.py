@@ -101,6 +101,8 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         
         # If we have values in the request, use these to get the terms.
         # Otherwise, take the value from the current saved value.
+        
+        terms = set([])
 
         request_values = self.extract(default=z3c.form.interfaces.NOVALUE)
         if request_values is not z3c.form.interfaces.NOVALUE:
