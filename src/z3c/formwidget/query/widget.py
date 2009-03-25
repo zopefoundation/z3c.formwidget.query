@@ -115,9 +115,11 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         elif not self.ignoreContext:
             
             selection = zope.component.getMultiAdapter(
-                (self.context, self.field), z3c.form.interfaces.IDataManager).get()
-
-            if not isinstance(selection, (tuple, set, list)):
+                (self.context, self.field), z3c.form.interfaces.IDataManager).query()
+            
+            if selection is z3c.form.interfaces.NOVALUE:
+                selection = []
+            elif not isinstance(selection, (tuple, set, list)):
                 selection = [selection]
             
             terms = set([source.getTerm(value) for value in selection if value])
