@@ -214,10 +214,10 @@ context. We'll submit an empty tuple.
 
   >>> widget = setupMultiWidget(cities, route, request)
 
-We expect an unchecked box.
+We expect the checkbox to be gone.
 
   >>> 'type="checkbox"' in widget()
-  True
+  False
   
   >>> 'checked="checked"' in widget()
   False

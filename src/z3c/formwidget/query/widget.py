@@ -160,13 +160,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 })
 
     def extract(self, default=z3c.form.interfaces.NOVALUE):
-        value = self.extractQueryWidget(default)
-        if value is z3c.form.interfaces.NOVALUE:
-            return value
-        elif len(value) == 0:
-            return default
-        else:
-            return value
+        return self.extractQueryWidget(default)
         
     def render(self):
         subform = self.subform
