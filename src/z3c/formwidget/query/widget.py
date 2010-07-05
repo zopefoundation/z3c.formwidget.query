@@ -121,8 +121,15 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 selection = []
             elif not isinstance(selection, (tuple, set, list)):
                 selection = [selection]
-            
-            terms = set([source.getTerm(value) for value in selection if value])
+            terms = []
+            for value in selection:
+                if not value:
+                    continue
+                try:
+                    terms.append(source.getTerm(value))
+                except LookupError:
+                    continue
+            terms = set(terms)
 
         # Set up query form
 
