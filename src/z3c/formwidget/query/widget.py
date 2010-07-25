@@ -104,7 +104,10 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         
         terms = set([])
 
-        request_values = self.extract(default=z3c.form.interfaces.NOVALUE)
+        request_values = z3c.form.interfaces.NOVALUE
+        if not self.ignoreRequest:
+            request_values = self.extract(default=z3c.form.interfaces.NOVALUE)
+
         if request_values is not z3c.form.interfaces.NOVALUE:
             if not isinstance(request_values, (tuple, set, list)):
                 request_values = (request_values,)
@@ -129,19 +132,21 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         subform = self.subform = QuerySubForm(QueryContext(), self.request, self.name)
         subform.update()
 
-        data, errors = subform.extractData()
-        if errors:
-            return
+        # Don't carry on any search if we're ignoring the request
+        if not self.ignoreRequest:
+            data, errors = subform.extractData()
+            if errors:
+                return
 
-        # perform the search
+            # perform the search
 
-        query = data['query']
-        if query is not None:
-            query_terms = set(source.search(query))
-            tokens = set([term.token for term in terms])
-            for term in query_terms:
-                if term.token not in tokens:
-                    terms.add(term)
+            query = data['query']
+            if query is not None:
+                query_terms = set(source.search(query))
+                tokens = set([term.token for term in terms])
+                for term in query_terms:
+                    if term.token not in tokens:
+                        terms.add(term)
         
         # set terms
         self.terms = QueryTerms(self.context, self.request, self.form, self.field, self, terms)

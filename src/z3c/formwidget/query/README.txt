@@ -128,6 +128,16 @@ Verify results:
   >>> 'Sorrento' in widget()
   False
 
+However, the source shouldn't be queried if ``ignoreRequest`` is True.
+
+  >>> request = TestRequest(form={
+  ...     'city.widgets.query': u'bologna'})
+
+  >>> widget = setupWidget(city, location, request)
+  >>> widget.ignoreRequest = True
+  >>> 'Bologna' in widget()
+  False
+
 Selecting 'Bologna' from the list should check the corresponding box.
 
   >>> request = TestRequest(form={
@@ -138,6 +148,29 @@ Selecting 'Bologna' from the list should check the corresponding box.
 
   >>> 'checked="checked"' in widget()
   True
+
+However, no terms should be added from the request if we're ignoring it.
+
+  >>> request = TestRequest(form={
+  ...     'city': ('bologna',)})
+
+  >>> widget = setupWidget(city, location, request)
+
+  >>> widget.ignoreRequest = True
+  >>> widget.update()
+  >>> 'bologna' in set([term.token for term in widget.terms])
+  False
+
+Nor from the context if we're ignoring it.
+
+  >>> request = TestRequest()
+
+  >>> widget = setupWidget(city, location, request)
+
+  >>> widget.ignoreContext = True
+  >>> widget.update()
+  >>> 'palermo' in set([term.token for term in widget.terms])
+  False
 
 Now we want to try out selection of multiple items.
 
