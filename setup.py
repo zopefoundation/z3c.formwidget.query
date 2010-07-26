@@ -2,14 +2,18 @@
 from setuptools import setup, find_packages
 
 setup(name='z3c.formwidget.query',
-      version='0.5',
+      version='0.6dev',
       author = "Zope Community",
       author_email = "zope3-dev@zope.org",
       description = "A source query widget for z3c.form.",
-      long_description=open('README.txt').read(),
+      long_description=(
+          open('README.txt').read()
+          + '\n\n' +
+          open('CHANGES.txt').read()
+          ),      
       license = "ZPL 2.1",
       keywords = "zope zope3 z3c.form",
-      url='http://svn.zope.org/z3c.formwidget',
+      url='http://pypi.python.org/pypi/z3c.formwidget.query',
       zip_safe=False,
       packages=find_packages('src'),
       include_package_data=True,
