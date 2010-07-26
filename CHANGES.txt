@@ -1,0 +1,21 @@
+Changelog
+=========
+
+0.6 (unreleased)
+----------------
+
+* Create changelog file.
+  [dukebody]
+
+* Respect the ignoreRequest parameter.
+  [dukebody]
+
+0.5 - 2009-04-17
+-----------------
+
+* ...
+
+0.3 - 2008-08-28
+-----------------
+
+* ...
