@@ -72,8 +72,9 @@ First we have to create a field and a request:
 Widgets
 -------
 
-There are two widgets available; one that corresponds to a single
-selection or a multi-selection of items from the source.
+There are four widgets available; one that corresponds to a single selection,
+a multi-selection of items from the source, and variants of these that set the
+ignoreMissing to True by default.
 
 To enable multiple selections, wrap the ``zope.schema.Choice`` in a field
 derived from ``zope.schema.Collection``.
@@ -170,6 +171,29 @@ Nor from the context if we're ignoring it.
   >>> widget.ignoreContext = True
   >>> widget.update()
   >>> 'palermo' in set([term.token for term in widget.terms])
+  False
+
+If the source changes so that the value is no longer available, rendering the
+widget raises an error.
+
+  >>> missinglocation = Location()
+  >>> missinglocation.city = u"Pompeii"
+
+  >>> request = TestRequest()
+  >>> widget = setupWidget(city, missinglocation, request)
+
+  >>> widget.update()
+  Traceback (most recent call last):
+  ...
+  LookupError: Pompeii
+
+This can be avoided by setting ``ignoreMissing`` on the widget:
+
+  >>> request = TestRequest()
+  >>> widget = setupWidget(city, missinglocation, request)
+
+  >>> widget.ignoreMissing = True
+  >>> 'type="radio"' in widget()
   False
 
 Now we want to try out selection of multiple items.

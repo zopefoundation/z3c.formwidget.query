@@ -4,6 +4,10 @@ Changelog
 0.6 (unreleased)
 ----------------
 
+* Add an ignoreMissing parameter and widget subclasses to avoid errors when
+  rendering missing values.
+  [elro]
+
 * Create changelog file.
   [dukebody]
 

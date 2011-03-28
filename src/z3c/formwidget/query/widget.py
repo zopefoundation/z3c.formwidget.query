@@ -70,6 +70,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
     _queryform = None
     _resultsform = None
     _bound_source = None
+    ignoreMissing = False
 
     noValueLabel = _(u'(nothing)')
 
@@ -112,8 +113,15 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             if not isinstance(request_values, (tuple, set, list)):
                 request_values = (request_values,)
 
-            terms = set([source.getTermByToken(token) for token in request_values 
-                            if token and token != self.noValueToken])
+            for token in request_values:
+                if not token or token == self.noValueToken:
+                    continue
+                try:
+                    terms.add(source.getTermByToken(token))
+                except LookupError:
+                    # Term no longer available
+                    if not self.ignoreMissing:
+                        raise
 
         elif not self.ignoreContext:
             
@@ -125,7 +133,15 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             elif not isinstance(selection, (tuple, set, list)):
                 selection = [selection]
             
-            terms = set([source.getTerm(value) for value in selection if value])
+            for value in selection:
+                if not value:
+                    continue
+                try:
+                    terms.add(source.getTerm(value))
+                except LookupError:
+                    # Term no longer available
+                    if not self.ignoreMissing:
+                        raise
 
         # Set up query form
 
@@ -214,3 +230,23 @@ def QuerySourceFieldRadioWidget(field, request):
 @zope.interface.implementer(z3c.form.interfaces.IFieldWidget)
 def QuerySourceFieldCheckboxWidget(field, request):
     return z3c.form.widget.FieldWidget(field, QuerySourceCheckboxWidget(request))
+
+class IgnoreMissingQuerySourceRadioWidget(QuerySourceRadioWidget):
+    """Query source widget that allows single selection and ignores missing
+    values."""
+    ignoreMissing = True
+
+class IgnoreMissingQuerySourceCheckboxWidget(QuerySourceRadioWidget):
+    """Query source widget that allows multiple selections and ignores missing
+    values."""
+    ignoreMissing = True
+
+@zope.interface.implementer(z3c.form.interfaces.IFieldWidget)
+def IgnoreMissingQuerySourceFieldRadioWidget(field, request):
+    return z3c.form.widget.FieldWidget(field,
+        IgnoreMissingQuerySourceRadioWidget(request))
+
+@zope.interface.implementer(z3c.form.interfaces.IFieldWidget)
+def IgnoreMissingQuerySourceFieldCheckboxWidget(field, request):
+    return z3c.form.widget.FieldWidget(field,
+        IgnoreMissingQuerySourceCheckboxWidget(request))
