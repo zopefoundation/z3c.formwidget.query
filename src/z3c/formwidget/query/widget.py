@@ -103,7 +103,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         # If we have values in the request, use these to get the terms.
         # Otherwise, take the value from the current saved value.
         
-        terms = set([])
+        terms = []
 
         request_values = z3c.form.interfaces.NOVALUE
         if not self.ignoreRequest:
@@ -117,7 +117,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 if not token or token == self.noValueToken:
                     continue
                 try:
-                    terms.add(source.getTermByToken(token))
+                    terms.append(source.getTermByToken(token))
                 except LookupError:
                     # Term no longer available
                     if not self.ignoreMissing:
@@ -137,7 +137,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 if not value:
                     continue
                 try:
-                    terms.add(source.getTerm(value))
+                    terms.append(source.getTerm(value))
                 except LookupError:
                     # Term no longer available
                     if not self.ignoreMissing:
@@ -162,7 +162,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 tokens = set([term.token for term in terms])
                 for term in query_terms:
                     if term.token not in tokens:
-                        terms.add(term)
+                        terms.append(term)
         
         # set terms
         self.terms = QueryTerms(self.context, self.request, self.form, self.field, self, terms)

@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.7 - unreleased
+----------------
+
+* Use an ordered list instead of a set to represent source items. 
+  [timo]
+
 0.6 - 2011-05-04
 ----------------
 
