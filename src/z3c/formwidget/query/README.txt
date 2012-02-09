@@ -323,7 +323,103 @@ The same is true of multi-select widgets::
   >>> 'Palermo' in widget()
   False
 
+Permission
+----------
 
+First let's create a simple security policy
+
+  >>> from zope.security.interfaces import IInteraction
+  >>> from zope.security.interfaces import ISecurityPolicy
+  >>> from zope.security.simplepolicies import ParanoidSecurityPolicy
+  >>> from zope.security.management import thread_local
+  >>> from zope.interface import classProvides
+  
+  >>> class SimpleSecurityPolicy(ParanoidSecurityPolicy):
+  ...     classProvides(ISecurityPolicy)
+  ...     interface.implements(IInteraction)
+  ...
+  ...     def checkPermission(self, permission, object):
+  ...         return object.permission == permission
+
+  >>> thread_local.interaction = SimpleSecurityPolicy()
+  
+Let's define a permission aware object
+
+  >>> from AccessControl.interfaces import IRoleManager
+  >>> class Document(object):
+  ...     interface.implements(IRoleManager)
+  ...
+  ...     name = None
+  ...     permission = None
+  ...
+  ...     def __init__(self, name, permission):
+  ...         self.name = name
+  ...         self.permission = permission
+
+  >>> secret_document = Document(u'Secret', 'zope2.Secret')
+  >>> public_document = Document(u'Public', 'zope2.View')
+  
+  >>> class PermissionSource(object):
+  ...     interface.implements(IQuerySource)
+  ...
+  ...     vocabulary = SimpleVocabulary((
+  ...         SimpleTerm(secret_document, 'secret', u'Secret'),
+  ...         SimpleTerm(public_document, 'public', u'Public')))
+  ...
+  ...     def __init__(self, context):
+  ...         self.context = context
+  ...
+  ...     __contains__ = vocabulary.__contains__
+  ...     __iter__ = vocabulary.__iter__
+  ...     getTerm = vocabulary.getTerm
+  ...     getTermByToken = vocabulary.getTermByToken
+  ...
+  ...     def search(self, query_string):
+  ...         return [v for v in self if query_string.lower() in v.name.lower()]
+
+  >>> from zope.schema.interfaces import IContextSourceBinder
+
+  >>> class PermissionSourceBinder(object):
+  ...     interface.implements(IContextSourceBinder)
+  ...
+  ...     def __call__(self, context):
+  ...         return PermissionSource(context)
+
+Now our field
+
+  >>> document = zope.schema.Choice(
+  ...     __name__='document',
+  ...     title=u'Document',
+  ...     description=u'Select a document.',
+  ...     source=PermissionSourceBinder())
+
+  >>> class Person(object):
+  ...
+  ...     document = None
+
+Let's first select our private document
+
+  >>> person = Person()
+  >>> person.document = secret_document
+
+  >>> request = TestRequest()
+
+  >>> widget = setupWidget(document, person, request)
+  >>> u'Secret' not in widget()
+  True
+
+And now, let's try with the public one
+
+  >>> person = Person()
+  >>> person.document = public_document
+
+  >>> request = TestRequest()
+
+  >>> widget = setupWidget(document, person, request)
+  >>> u'Public' in widget()
+  True
+
+  
 Todo
 ----
 

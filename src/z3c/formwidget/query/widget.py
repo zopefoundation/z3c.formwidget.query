@@ -3,8 +3,11 @@ import zope.interface
 import zope.schema
 import zope.schema.interfaces
 
+from zope.security import checkPermission
+
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.interfaces import ISource, IContextSourceBinder
+from AccessControl.interfaces import IRoleManager
 
 import z3c.form.interfaces
 import z3c.form.button
@@ -136,6 +139,9 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             for value in selection:
                 if not value:
                     continue
+                if IRoleManager.providedBy(value):
+                    if not checkPermission('zope2.View', value):
+                        continue
                 try:
                     terms.append(source.getTerm(value))
                 except LookupError:
