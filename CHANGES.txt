@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.8 - 2012-02-20
+----------------
+
+* If one of the values to be displayed provides IRoleManager,
+  then check for permission first.
+  [frapell]
+
 0.7 - 2011-11-07 
 ----------------
 
