@@ -58,7 +58,6 @@ Fields setup
 
   >>> import zope.component
   >>> import zope.schema
-  >>> import zope.app.form.browser
   >>> from zope.publisher.interfaces.browser import IBrowserRequest
 
 First we have to create a field and a request:

@@ -4,6 +4,8 @@ Changelog
 0.9 - unreleased
 ----------------
 
+* Remove unused dependency on zope.app.form.
+  [hannosch]
 
 0.8 - 2012-02-20
 ----------------

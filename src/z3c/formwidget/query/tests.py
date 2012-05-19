@@ -10,16 +10,18 @@ def setUp(test):
         interface=interface,
         component=component,
         schema=schema)
-        
+
+
 def tearDown(test):
     setup.placefulTearDown()
+
 
 def test_suite():
     return unittest.TestSuite((
         doctest.DocFileSuite(
             'README.txt',
             setUp=setUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
         ))
 
 if __name__ == '__main__':

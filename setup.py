@@ -10,7 +10,7 @@ setup(name='z3c.formwidget.query',
           open('README.txt').read()
           + '\n\n' +
           open('CHANGES.txt').read()
-          ),      
+          ),
       license = "ZPL 2.1",
       keywords = "zope zope3 z3c.form",
       url='http://pypi.python.org/pypi/z3c.formwidget.query',
@@ -24,7 +24,6 @@ setup(name='z3c.formwidget.query',
                                   ]),
       install_requires = ['setuptools',
                           'z3c.form',
-                          'zope.app.form',
                           'zope.interface',
                           'zope.schema',
                           'zope.component',
