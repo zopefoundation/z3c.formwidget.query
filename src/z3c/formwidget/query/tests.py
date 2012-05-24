@@ -1,19 +1,20 @@
 import doctest
 import unittest
 from zope import interface, component, schema
-from zope.app.testing import setup
+from zope.testing.cleanup import cleanUp
+from z3c.form import testing
 
 
 def setUp(test):
-    test.globs = dict(
-        root=setup.placefulSetUp(True),
+    testing.setUp(test)
+    test.globs.update(dict(
         interface=interface,
         component=component,
-        schema=schema)
+        schema=schema))
 
 
 def tearDown(test):
-    setup.placefulTearDown()
+    cleanUp()
 
 
 def test_suite():

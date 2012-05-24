@@ -4,6 +4,9 @@ Changelog
 0.9 - unreleased
 ----------------
 
+* Avoid test dependency on zope.app.testing.
+  [hannosch]
+
 * Remove unused dependency on zope.app.form.
   [hannosch]
 
