@@ -21,6 +21,7 @@ setup(name='z3c.formwidget.query',
       namespace_packages=['z3c', 'z3c.formwidget'],
       extras_require = dict(test=['zope.app.testing',
                                   'zope.testing',
+                                  'z3c.form [test]'
                                   ]),
       install_requires = ['setuptools',
                           'z3c.form',

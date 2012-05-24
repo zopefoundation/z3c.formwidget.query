@@ -7,7 +7,6 @@ from zope.security import checkPermission
 
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.interfaces import ISource, IContextSourceBinder
-from AccessControl.interfaces import IRoleManager
 
 import z3c.form.interfaces
 import z3c.form.button
@@ -19,6 +18,13 @@ import z3c.form.browser.radio
 import z3c.form.browser.checkbox
 
 from z3c.formwidget.query import MessageFactory as _
+
+HAS_AC = True
+try:
+    from AccessControl.interfaces import IRoleManager
+except ImportError:
+    HAS_AC = False
+
 
 class SourceTerms(z3c.form.term.Terms):
     
@@ -139,7 +145,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             for value in selection:
                 if not value:
                     continue
-                if IRoleManager.providedBy(value):
+                if HAS_AC and IRoleManager.providedBy(value):
                     if not checkPermission('zope2.View', value):
                         continue
                 try:

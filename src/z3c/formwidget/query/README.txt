@@ -341,12 +341,17 @@ First let's create a simple security policy
   ...         return object.permission == permission
 
   >>> thread_local.interaction = SimpleSecurityPolicy()
-  
+
 Let's define a permission aware object
 
-  >>> from AccessControl.interfaces import IRoleManager
+  >>> HAS_AC = True
+  >>> try:
+  ...     from AccessControl.interfaces import IRoleManager
+  ... except ImportError:
+  ...     HAS_AC = False
   >>> class Document(object):
-  ...     interface.implements(IRoleManager)
+  ...     if HAS_AC:
+  ...         interface.implements(IRoleManager)
   ...
   ...     name = None
   ...     permission = None
@@ -404,7 +409,10 @@ Let's first select our private document
   >>> request = TestRequest()
 
   >>> widget = setupWidget(document, person, request)
-  >>> u'Secret' not in widget()
+  >>> if HAS_AC:
+  ...     u'Secret' not in widget()
+  ... else:
+  ...     print True
   True
 
 And now, let's try with the public one
@@ -418,7 +426,7 @@ And now, let's try with the public one
   >>> u'Public' in widget()
   True
 
-  
+
 Todo
 ----
 
