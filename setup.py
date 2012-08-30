@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='z3c.formwidget.query',
-      version='0.9',
+      version='0.10.dev0',
       author = "Zope Community",
       author_email = "zope3-dev@zope.org",
       description = "A source query widget for z3c.form.",
