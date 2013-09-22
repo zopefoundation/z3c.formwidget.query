@@ -186,7 +186,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         if self._radio and not self.required:
             self.items.insert(0, {
                 'id': self.id + '-novalue',
-                'name': self.name + ':list',
+                'name': self.name,
                 'value': self.noValueToken,
                 'label': self.noValueLabel,
                 'checked': not self.value or self.value[0] == self.noValueToken,

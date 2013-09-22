@@ -4,7 +4,9 @@ Changelog
 0.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Remove :list from novalue radio box name to be the same behavior
+  as z3c.form >= 2.6.0.
+  [vincentfretin]
 
 
 0.9 (2012-08-30)

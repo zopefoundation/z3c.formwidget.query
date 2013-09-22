@@ -23,7 +23,7 @@ setup(name='z3c.formwidget.query',
                                   'z3c.form [test]'
                                   ]),
       install_requires = ['setuptools',
-                          'z3c.form',
+                          'z3c.form >= 2.6.0',
                           'zope.interface',
                           'zope.schema',
                           'zope.component',
