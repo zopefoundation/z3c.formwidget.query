@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.10 (unreleased)
+0.10 (2014-02-19)
 -----------------
 
 - Remove :list from novalue radio box name to be the same behavior
