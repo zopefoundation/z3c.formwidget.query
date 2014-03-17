@@ -154,6 +154,24 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                     # Term no longer available
                     if not self.ignoreMissing:
                         raise
+        elif self.showDefault:
+            adapter = zope.component.queryMultiAdapter(
+                (self.context, self.request, self.form, self.field, self),
+                z3c.form.interfaces.IValue, name='default')
+            if adapter:
+                default_value = adapter.get()
+                for value in default_value:
+                    if not value:
+                        continue
+                    if HAS_AC and IRoleManager.providedBy(value):
+                        if not checkPermission('zope2.View', value):
+                            continue
+                    try:
+                        terms.append(source.getTerm(value))
+                    except LookupError:
+                        # Term no longer available                             
+                        if not self.ignoreMissing:
+                            raise
 
         # Set up query form
 
