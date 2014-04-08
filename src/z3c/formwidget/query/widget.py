@@ -160,6 +160,8 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
                 z3c.form.interfaces.IValue, name='default')
             if adapter:
                 default_value = adapter.get()
+                if not isinstance(default_value, (tuple, set, list)):
+                    default_value = [default_value]
                 for value in default_value:
                     if not value:
                         continue
