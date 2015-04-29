@@ -412,7 +412,7 @@ Let's first select our private document
   >>> if HAS_AC:
   ...     u'Secret' not in widget()
   ... else:
-  ...     print True
+  ...     print(True)
   True
 
 And now, let's try with the public one
