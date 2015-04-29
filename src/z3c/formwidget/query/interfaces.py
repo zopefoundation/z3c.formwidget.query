@@ -1,5 +1,6 @@
 from zope.schema.interfaces import IVocabularyTokenized
 
+
 class IQuerySource(IVocabularyTokenized):
     """A source that supports searching
     """
