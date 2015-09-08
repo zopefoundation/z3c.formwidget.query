@@ -1,4 +1,4 @@
-include *.txt
+include *rst *.txt
 graft src
 global-exclude *.pyc
 global-exclude *.pyo

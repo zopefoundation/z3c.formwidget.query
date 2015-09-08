@@ -7,9 +7,9 @@ setup(name='z3c.formwidget.query',
       author_email = "zope3-dev@zope.org",
       description = "A source query widget for z3c.form.",
       long_description=(
-          open('README.txt').read()
+          open('README.rst').read()
           + '\n\n' +
-          open('CHANGES.txt').read()
+          open('CHANGES.rst').read()
           ),
       license = "ZPL 2.1",
       keywords = "zope zope3 z3c.form",
