@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-0.12 (unreleased)
+0.12 (2015-09-09)
 -----------------
 
 - Code moved to https://github.com/zopefoundation/z3c.formwidget.query
