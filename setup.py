@@ -1,5 +1,7 @@
 #!python
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
+
 
 setup(name='z3c.formwidget.query',
       version='0.14.1.dev0',
@@ -42,4 +44,8 @@ setup(name='z3c.formwidget.query',
           'Programming Language :: Python :: 2.7',
           'Topic :: Software Development :: Libraries :: Python Modules',
           ],
+      entry_points='''
+          [z3c.autoinclude.plugin]
+          target = z3c.form
+      ''',
       )
