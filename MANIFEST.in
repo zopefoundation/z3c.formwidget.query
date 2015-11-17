@@ -1,4 +1,5 @@
-include *rst *.txt
+include *.rst *.txt
+include tox.ini
 graft src
 global-exclude *.pyc
 global-exclude *.pyo
