@@ -1,3 +1,5 @@
+from itertools import chain
+
 import zope.component
 import zope.interface
 import zope.schema
@@ -102,6 +104,27 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             assert ISource.providedBy(source)
             self._bound_source = source
         return self._bound_source
+
+
+    @property
+    def items(self):
+        # add "novalue" option
+        items_getter = z3c.form.browser.radio.RadioWidget.items
+        if isinstance(z3c.form.browser.radio.RadioWidget.items, property):
+            items = z3c.form.browser.radio.RadioWidget.items.fget(self)
+        else:
+            items = z3c.form.browser.radio.RadioWidget.items(self)
+
+        if self._radio and not self.required:
+            return chain([{
+                'id': self.id + '-novalue',
+                'name': self.name,
+                'value': self.noValueToken,
+                'label': self.noValueLabel,
+                'checked': not self.value or self.value[0] == self.noValueToken,
+            }], items)
+        else:
+            return items
 
     def update(self):
 
@@ -220,16 +243,6 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
 
         # update widget - will set self.value
         self.updateQueryWidget()
-
-        # add "novalue" option
-        if self._radio and not self.required:
-            self.items.insert(0, {
-                'id': self.id + '-novalue',
-                'name': self.name,
-                'value': self.noValueToken,
-                'label': self.noValueLabel,
-                'checked': not self.value or self.value[0] == self.noValueToken,
-            })
 
     def extract(self, default=z3c.form.interfaces.NOVALUE):
         return self.extractQueryWidget(default)
