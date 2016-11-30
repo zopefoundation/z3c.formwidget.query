@@ -2,10 +2,11 @@ Changelog
 =========
 
 
-0.13 (unreleased)
+1.0 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Compatible with z3c.form > 3.2.10, where radio and checkbox `items` property is a generator.
+  [thomasdesvenain]
 
 
 0.12 (2015-09-09)
@@ -51,7 +52,7 @@ Changelog
 0.7 (2011-11-07)
 ----------------
 
-* Use an ordered list instead of a set to represent source items. 
+* Use an ordered list instead of a set to represent source items.
   [timo]
 
 
