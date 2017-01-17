@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0 (unreleased)
+0.13 (2017-01-17)
 -----------------
 
 - Compatible with z3c.form > 3.2.10, where radio and checkbox `items` property is a generator.
