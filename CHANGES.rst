@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-0.14 (unreleased)
+0.14 (2017-07-18)
 -----------------
 
 - Drop support for Python 2.6.
