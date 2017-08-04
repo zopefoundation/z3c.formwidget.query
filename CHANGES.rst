@@ -5,7 +5,8 @@ Changelog
 0.14.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added translations for this package.
+  [ale-rt]
 
 
 0.14 (2017-07-18)
