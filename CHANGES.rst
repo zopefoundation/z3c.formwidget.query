@@ -5,8 +5,8 @@ Changelog
 0.14.1 (unreleased)
 -------------------
 
-- Added translations for this package.
-  [ale-rt]
+- Added translations for this package.  Italian and Dutch available now.
+  [ale-rt, fredvd, maurits]
 
 
 0.14 (2017-07-18)
