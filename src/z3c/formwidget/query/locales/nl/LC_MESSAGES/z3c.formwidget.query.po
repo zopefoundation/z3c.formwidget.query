@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: z3c.formwidget.query\n"
-"POT-Creation-Date: 2014-08-15 14:28+0000\n"
+"POT-Creation-Date: 2017-08-09 15:33+0000\n"
 "PO-Revision-Date: 2017-08-09 17:30 +0200\n"
 "Last-Translator: Fred van Dijk <f.van.dijk@zestsoftware.nl>\n"
 "Language-Team: Zest Software <info@zestsoftware.nl>\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Domain: z3c.formwidget.query\n"
 "Language: nl\n"
 
-#: ./roles.py:18
-msgid "Search"
-msgstr "zoeken"
-
-#: ./util.py:9
+#: z3c/formwidget/query/widget.py:90
 msgid "(nothing)"
 msgstr "(niets)"
+
+#: z3c/formwidget/query/widget.py:70
+msgid "Search"
+msgstr "zoeken"

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-11-10 09:37+0000\n"
+"POT-Creation-Date: 2017-08-09 15:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,11 +14,10 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: z3c/formwidget/query/widget.py:88
+#: z3c/formwidget/query/widget.py:90
 msgid "(nothing)"
 msgstr ""
 
-#: z3c/formwidget/query/widget.py:68
+#: z3c/formwidget/query/widget.py:70
 msgid "Search"
 msgstr ""
-
