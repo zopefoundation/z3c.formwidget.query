@@ -15,7 +15,7 @@ function i18nizer {
     i18ndude merge --pot $POT --merge $MANUAL_POT
 
     for LANG in $BASEFOLDER/locales/*/LC_MESSAGES; do
-        PO_BASENAME=`realpath $LANG/$DOMAIN`
+        PO_BASENAME=$LANG/$DOMAIN
         touch $PO_BASENAME.po
         i18ndude sync --pot $POT $PO_BASENAME.po
         msgfmt -o $PO_BASENAME.mo $PO_BASENAME.po
