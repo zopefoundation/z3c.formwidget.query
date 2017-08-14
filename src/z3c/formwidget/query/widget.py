@@ -105,23 +105,23 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             self._bound_source = source
         return self._bound_source
 
-
     @property
     def items(self):
         # add "novalue" option
         items_getter = z3c.form.browser.radio.RadioWidget.items
-        if isinstance(z3c.form.browser.radio.RadioWidget.items, property):
-            items = z3c.form.browser.radio.RadioWidget.items.fget(self)
+        if isinstance(items_getter, property):
+            items = items_getter.fget(self)
         else:
-            items = z3c.form.browser.radio.RadioWidget.items(self)
+            items = items_getter(self)
 
         if self._radio and not self.required:
+            checked = not self.value or self.value[0] == self.noValueToken
             return chain([{
                 'id': self.id + '-novalue',
                 'name': self.name,
                 'value': self.noValueToken,
                 'label': self.noValueLabel,
-                'checked': not self.value or self.value[0] == self.noValueToken,
+                'checked': checked,
             }], items)
         else:
             return items
@@ -168,7 +168,8 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         elif not self.ignoreContext:
 
             selection = zope.component.getMultiAdapter(
-                (self.context, self.field), z3c.form.interfaces.IDataManager).query()
+                (self.context, self.field),
+                z3c.form.interfaces.IDataManager).query()
 
             if selection is z3c.form.interfaces.NOVALUE:
                 selection = []
