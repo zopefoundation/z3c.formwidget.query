@@ -47,6 +47,6 @@ setup(
     ],
     entry_points='''
         [z3c.autoinclude.plugin]
-        target = z3c.form
+        target = plone
     ''',
 )

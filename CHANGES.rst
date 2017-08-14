@@ -5,7 +5,7 @@ Changelog
 0.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.  [maurits]
 
 
 0.15 (2017-08-09)
