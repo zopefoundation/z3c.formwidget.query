@@ -5,7 +5,9 @@ Changelog
 0.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
+Bug fixes:
+
+- Improved code quality.  [maurits]
 
 
 0.15 (2017-08-09)
