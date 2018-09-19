@@ -11,7 +11,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Add support for Python 3
+  [pbauer]
 
 Bug fixes:
 
