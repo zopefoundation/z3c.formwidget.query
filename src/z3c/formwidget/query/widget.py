@@ -52,8 +52,8 @@ class QueryTerms(z3c.form.term.Terms):
         self.terms = SimpleVocabulary(terms)
 
 
+@zope.interface.implementer(z3c.form.interfaces.ISubForm)
 class QuerySubForm(z3c.form.form.Form):
-    zope.interface.implements(z3c.form.interfaces.ISubForm)
     css_class = 'querySelectSearch'
 
     fields = z3c.form.field.Fields(
@@ -268,11 +268,10 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
         return z3c.form.browser.radio.RadioWidget.extract(self, default)
 
 
+@zope.interface.implementer_only(z3c.form.interfaces.ICheckBoxWidget)
 class QuerySourceCheckboxWidget(
         QuerySourceRadioWidget, z3c.form.browser.checkbox.CheckBoxWidget):
     """Query source widget that allows multiple selections."""
-
-    zope.interface.implementsOnly(z3c.form.interfaces.ICheckBoxWidget)
 
     _radio = False
 
