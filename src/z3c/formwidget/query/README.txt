@@ -344,18 +344,31 @@ First let's create a simple security policy
 
 Let's define a permission aware object
 
-  >>> from AccessControl.interfaces import IRoleManager
   >>> HAS_AC = True
+  >>> try:
+  ...     from AccessControl.interfaces import IRoleManager
+  ... except ImportError:
+  ...     HAS_AC = False
 
-  >>> @interface.implementer(IRoleManager)
-  ... class Document(object):
+  >>> if HAS_AC:
+  ...     @interface.implementer(IRoleManager)
+  ...     class Document(object):
   ...
-  ...     name = None
-  ...     permission = None
+  ...        name = None
+  ...        permission = None
   ...
-  ...     def __init__(self, name, permission):
-  ...         self.name = name
-  ...         self.permission = permission
+  ...        def __init__(self, name, permission):
+  ...            self.name = name
+  ...            self.permission = permission
+  ... else:
+  ...     class Document(object):
+  ...
+  ...        name = None
+  ...        permission = None
+  ...
+  ...        def __init__(self, name, permission):
+  ...            self.name = name
+  ...            self.permission = permission
 
   >>> secret_document = Document(u'Secret', 'zope2.Secret')
   >>> public_document = Document(u'Public', 'zope2.View')
