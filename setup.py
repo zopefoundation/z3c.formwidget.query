@@ -15,7 +15,7 @@ setup(
     ),
     license="ZPL 2.1",
     keywords="zope zope3 z3c.form",
-    url='https://pypi.python.org/pypi/z3c.formwidget.query',
+    url='https://pypi.org/project/z3c.formwidget.query',
     zip_safe=False,
     packages=find_packages('src'),
     include_package_data=True,
