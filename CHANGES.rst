@@ -11,6 +11,9 @@ Breaking changes:
 
 New features:
 
+- Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.  
+  [maurits]
+
 - Add support for Python 3
   [pbauer]
 
