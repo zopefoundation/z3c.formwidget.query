@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='z3c.formwidget.query',
-    version='0.16.dev0',
+    version='0.17.dev0',
     author="Zope Community",
     author_email="zope3-dev@zope.org",
     description="A source query widget for z3c.form.",
@@ -15,7 +15,7 @@ setup(
     ),
     license="ZPL 2.1",
     keywords="zope zope3 z3c.form",
-    url='https://pypi.python.org/pypi/z3c.formwidget.query',
+    url='https://pypi.org/project/z3c.formwidget.query',
     zip_safe=False,
     packages=find_packages('src'),
     include_package_data=True,
@@ -43,6 +43,8 @@ setup(
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     entry_points='''

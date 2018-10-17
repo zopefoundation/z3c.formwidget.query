@@ -2,10 +2,32 @@ Changelog
 =========
 
 
-0.16 (unreleased)
+0.17 (unreleased)
 -----------------
 
-- Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.  [maurits]
+Breaking changes:
+
+- *add item here*
+
+New features:
+
+- Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.  
+  [maurits]
+
+- Add support for Python 3
+  [pbauer]
+
+Bug fixes:
+
+- *add item here*
+
+
+0.16 (2017-11-26)
+-----------------
+
+Bug fixes:
+
+- Improved code quality.  [maurits]
 
 
 0.15 (2017-08-09)

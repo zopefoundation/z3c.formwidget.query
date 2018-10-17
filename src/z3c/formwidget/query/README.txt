@@ -26,8 +26,8 @@ Let's start by defining a source.
 
 To make things simple, we'll just use unicode strings as values.
 
-  >>> class ItalianCities(object):
-  ...     interface.implements(IQuerySource)
+  >>> @interface.implementer(IQuerySource)
+  ... class ItalianCities(object):
   ...
   ...     vocabulary = SimpleVocabulary((
   ...         SimpleTerm(u'Bologna', 'bologna', u'Bologna'),
@@ -47,12 +47,12 @@ To make things simple, we'll just use unicode strings as values.
 
   >>> from zope.schema.interfaces import IContextSourceBinder
 
-  >>> class ItalianCitiesSourceBinder(object):
-  ...     interface.implements(IContextSourceBinder)
+  >>> @interface.implementer(IContextSourceBinder)
+  ... class ItalianCitiesSourceBinder(object):
   ...
   ...     def __call__(self, context):
   ...         return ItalianCities(context)
-  
+
 Fields setup
 ------------
 
@@ -82,7 +82,7 @@ Let's begin with a single selection.
 
   >>> class Location(object):
   ...     city = None
-  
+
   >>> location = Location()
 
   >>> from z3c.formwidget.query.widget import QuerySourceFieldRadioWidget
@@ -97,7 +97,7 @@ Let's begin with a single selection.
   >>> request = TestRequest()
 
 An empty query is not carried out.
-  
+
   >>> widget = setupWidget(city, location, request)
   >>> 'type="radio"' in widget()
   False
@@ -109,19 +109,19 @@ Let's choose a city:
   >>> widget = setupWidget(city, location, request)
 
 We now expect a radio button to be present.
-  
+
   >>> 'type="radio"' in widget()
   True
-  
+
 We can put a query string in the request, and have our source queried.
 
   >>> request = TestRequest(form={
   ...     'city.widgets.query': u'bologna'})
-  
+
   >>> widget = setupWidget(city, location, request)
 
 Verify results:
-  
+
   >>> 'Bologna' in widget()
   True
 
@@ -207,7 +207,7 @@ Now we want to try out selection of multiple items.
 
   >>> class Route(object):
   ...     cities = ()
-  
+
   >>> route = Route()
 
   >>> from z3c.formwidget.query.widget import QuerySourceFieldCheckboxWidget
@@ -219,9 +219,9 @@ Now we want to try out selection of multiple items.
   ...     return widget
 
   >>> request = TestRequest()
-  
+
 An empty query is not carried out.
-  
+
   >>> widget = setupMultiWidget(cities, route, request)
   >>> 'type="checkbox"' in widget()
   False
@@ -233,12 +233,12 @@ Let's set a city on the route:
   >>> widget = setupMultiWidget(cities, route, request)
   >>> 'type="checkbox"' in widget()
   True
-  
+
 Let's make a query for "bologna".
 
   >>> request = TestRequest(form={
   ...     'cities.widgets.query': u'bologna'})
-  
+
   >>> widget = setupMultiWidget(cities, route, request)
 
 Verify results:
@@ -274,7 +274,7 @@ We expect the checkbox to be gone.
 
   >>> 'type="checkbox"' in widget()
   False
-  
+
   >>> 'checked="checked"' in widget()
   False
 
@@ -310,7 +310,7 @@ The same is true of multi-select widgets::
   ...     title=u'Cities',
   ...     description=u'Select one or more cities.',
   ...     value_type=zope.schema.Choice(
-  ...        vocabulary=u'test vocabulary name' 
+  ...        vocabulary=u'test vocabulary name'
   ...     ))
   >>> route = Route()
   >>> request = TestRequest(form={
@@ -331,11 +331,11 @@ First let's create a simple security policy
   >>> from zope.security.interfaces import ISecurityPolicy
   >>> from zope.security.simplepolicies import ParanoidSecurityPolicy
   >>> from zope.security.management import thread_local
-  >>> from zope.interface import classProvides
-  
-  >>> class SimpleSecurityPolicy(ParanoidSecurityPolicy):
-  ...     classProvides(ISecurityPolicy)
-  ...     interface.implements(IInteraction)
+  >>> from zope.interface import provider
+
+  >>> @provider(ISecurityPolicy)
+  ... @interface.implementer(IInteraction)
+  ... class SimpleSecurityPolicy(ParanoidSecurityPolicy):
   ...
   ...     def checkPermission(self, permission, object):
   ...         return object.permission == permission
@@ -349,22 +349,31 @@ Let's define a permission aware object
   ...     from AccessControl.interfaces import IRoleManager
   ... except ImportError:
   ...     HAS_AC = False
-  >>> class Document(object):
-  ...     if HAS_AC:
-  ...         interface.implements(IRoleManager)
+
+  >>> if HAS_AC:
+  ...     @interface.implementer(IRoleManager)
+  ...     class Document(object):
   ...
-  ...     name = None
-  ...     permission = None
+  ...        name = None
+  ...        permission = None
   ...
-  ...     def __init__(self, name, permission):
-  ...         self.name = name
-  ...         self.permission = permission
+  ...        def __init__(self, name, permission):
+  ...            self.name = name
+  ...            self.permission = permission
+  ... else:
+  ...     class Document(object):
+  ...
+  ...        name = None
+  ...        permission = None
+  ...
+  ...        def __init__(self, name, permission):
+  ...            self.name = name
+  ...            self.permission = permission
 
   >>> secret_document = Document(u'Secret', 'zope2.Secret')
   >>> public_document = Document(u'Public', 'zope2.View')
-  
-  >>> class PermissionSource(object):
-  ...     interface.implements(IQuerySource)
+  >>> @interface.implementer(IQuerySource)
+  ... class PermissionSource(object):
   ...
   ...     vocabulary = SimpleVocabulary((
   ...         SimpleTerm(secret_document, 'secret', u'Secret'),
@@ -382,9 +391,8 @@ Let's define a permission aware object
   ...         return [v for v in self if query_string.lower() in v.name.lower()]
 
   >>> from zope.schema.interfaces import IContextSourceBinder
-
-  >>> class PermissionSourceBinder(object):
-  ...     interface.implements(IContextSourceBinder)
+  >>> @interface.implementer(IContextSourceBinder)
+  ... class PermissionSourceBinder(object):
   ...
   ...     def __call__(self, context):
   ...         return PermissionSource(context)
