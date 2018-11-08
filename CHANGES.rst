@@ -5,10 +5,6 @@ Changelog
 0.17 (unreleased)
 -----------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.  
@@ -16,10 +12,6 @@ New features:
 
 - Add support for Python 3
   [pbauer]
-
-Bug fixes:
-
-- *add item here*
 
 
 0.16 (2017-11-26)
