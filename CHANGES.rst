@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-0.17 (unreleased)
+0.17 (2018-11-08)
 -----------------
 
 New features:
