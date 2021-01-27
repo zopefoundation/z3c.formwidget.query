@@ -1,5 +1,15 @@
-include *.rst *.txt
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/pure-python
+include *.rst
+include *.txt
+include buildout.cfg
 include tox.ini
-graft src
-global-exclude *.pyc
-global-exclude *.pyo
+
+recursive-include src *.pt
+recursive-include src *.py
+recursive-include src *.rst
+recursive-include src *.txt
+recursive-include src *.zcml
+recursive-include src *.pot
+recursive-include src *.sh
+recursive-include src *.po
