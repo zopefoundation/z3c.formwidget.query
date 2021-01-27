@@ -1,21 +1,10 @@
 Changelog
 =========
 
-
 0.18 (unreleased)
 -----------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
+- Add support for Python 3.5, 3.8 and 3.9.
 
 
 0.17 (2018-11-08)
@@ -23,7 +12,7 @@ Bug fixes:
 
 New features:
 
-- Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.  
+- Register ``z3c.autoinclude`` entry point for automatic inclusion in plone.
   [maurits]
 
 - Add support for Python 3
