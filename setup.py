@@ -24,7 +24,8 @@ setup(
     extras_require=dict(
         test=[
             'zope.testing',
-            'z3c.form [test]'
+            'z3c.form [test]',
+            'lxml',
         ]),
     install_requires=[
         'setuptools',
@@ -40,11 +41,16 @@ setup(
         'Framework :: Zope :: 3',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
-        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
+        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',  # noqa: E501 line too long
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     entry_points='''
