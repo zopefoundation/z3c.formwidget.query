@@ -23,9 +23,10 @@ setup(
     namespace_packages=['z3c', 'z3c.formwidget'],
     extras_require=dict(
         test=[
-            'zope.testing',
-            'z3c.form [test]',
             'lxml',
+            'z3c.form [test]',
+            'zope.testing',
+            'zope.testrunner',
         ]),
     install_requires=[
         'setuptools',
