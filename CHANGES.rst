@@ -4,7 +4,7 @@ Changelog
 0.18 (unreleased)
 -----------------
 
-- Add support for Python 3.5, 3.8 and 3.9.
+- Add support for Python 3.5, 3.8, 3.9, 3.10.
 
 
 0.17 (2018-11-08)
