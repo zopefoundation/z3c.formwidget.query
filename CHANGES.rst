@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.18 (unreleased)
------------------
+1.0.0 (2022-09-07)
+------------------
 
 - Add Chinese translation.
 
