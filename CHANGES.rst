@@ -4,6 +4,8 @@ Changelog
 0.18 (unreleased)
 -----------------
 
+- Add Chinese translation.
+
 - Add support for Python 3.5, 3.8, 3.9, 3.10.
 
 
