@@ -1,25 +1,24 @@
 from itertools import chain
 
+import z3c.form.browser.checkbox
+import z3c.form.browser.radio
+import z3c.form.button
+import z3c.form.field
+import z3c.form.form
+import z3c.form.interfaces
+import z3c.form.term
+import z3c.form.widget
 import zope.component
 import zope.interface
 import zope.schema
 import zope.schema.interfaces
-
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.interfaces import ISource
+from zope.schema.vocabulary import SimpleVocabulary
 from zope.security import checkPermission
 
-from zope.schema.vocabulary import SimpleVocabulary
-from zope.schema.interfaces import ISource, IContextSourceBinder
-
-import z3c.form.interfaces
-import z3c.form.button
-import z3c.form.form
-import z3c.form.field
-import z3c.form.widget
-import z3c.form.term
-import z3c.form.browser.radio
-import z3c.form.browser.checkbox
-
 from z3c.formwidget.query import MessageFactory as _
+
 
 HAS_AC = True
 try:
