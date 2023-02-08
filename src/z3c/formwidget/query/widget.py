@@ -61,19 +61,19 @@ class QuerySubForm(z3c.form.form.Form):
             required=False))
 
     def __init__(self, context, request, prefix=None):
-        super(QuerySubForm, self).__init__(context, request)
+        super().__init__(context, request)
 
         if prefix is not None:
             self.prefix = prefix
 
-    @z3c.form.button.buttonAndHandler(_(u"Search"))
+    @z3c.form.button.buttonAndHandler(_("Search"))
     def search(self, action):
         data, errors = self.widgets.extract()
         if not errors:
             z3c.form.form.applyChanges(self, self.context, data)
 
 
-class QueryContext(object):
+class QueryContext:
     query = None
 
 
@@ -86,7 +86,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
     _bound_source = None
     ignoreMissing = False
 
-    noValueLabel = _(u'(nothing)')
+    noValueLabel = _('(nothing)')
 
     @property
     def source(self):
@@ -227,7 +227,7 @@ class QuerySourceRadioWidget(z3c.form.browser.radio.RadioWidget):
             query = data['query']
             if query is not None:
                 query_terms = set(source.search(query))
-                tokens = set([term.token for term in terms])
+                tokens = {term.token for term in terms}
                 for term in query_terms:
                     if term.token not in tokens:
                         terms.append(term)
