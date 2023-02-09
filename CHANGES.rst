@@ -1,8 +1,12 @@
 Changelog
 =========
 
-1.0.1 (unreleased)
-------------------
+2.0 (unreleased)
+----------------
+
+- Add support for Python 3.11.
+
+- Drop support for Python 2.7, 3.5, 3.6.
 
 Breaking changes:
 

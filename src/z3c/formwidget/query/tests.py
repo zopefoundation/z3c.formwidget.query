@@ -1,8 +1,11 @@
 import doctest
 import unittest
-from zope import interface, component, schema
-from zope.testing.cleanup import cleanUp
+
 from z3c.form import testing
+from zope import component
+from zope import interface
+from zope import schema
+from zope.testing.cleanup import cleanUp
 
 
 def setUp(test):
