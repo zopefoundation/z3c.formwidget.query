@@ -4,21 +4,13 @@ Changelog
 2.0 (unreleased)
 ----------------
 
-- Add support for Python 3.11.
+Breaking changes:
 
 - Drop support for Python 2.7, 3.5, 3.6.
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
+- Add support for Python 3.11.
 
 
 1.0.0 (2022-09-07)
