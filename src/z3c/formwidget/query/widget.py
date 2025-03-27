@@ -23,7 +23,7 @@ from z3c.formwidget.query import MessageFactory as _
 HAS_AC = True
 try:
     from AccessControl.interfaces import IRoleManager
-except ImportError:
+except ModuleNotFoundError:
     HAS_AC = False
 
 
