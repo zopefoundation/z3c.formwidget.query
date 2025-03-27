@@ -347,7 +347,7 @@ Let's define a permission aware object
   >>> HAS_AC = True
   >>> try:
   ...     from AccessControl.interfaces import IRoleManager
-  ... except ImportError:
+  ... except ModuleNotFoundError:
   ...     HAS_AC = False
 
   >>> if HAS_AC:

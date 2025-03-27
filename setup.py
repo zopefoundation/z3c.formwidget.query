@@ -13,7 +13,7 @@ setup(
         open('README.rst').read() + '\n\n' +
         open('CHANGES.rst').read()
     ),
-    license="ZPL 2.1",
+    license="ZPL-2.1",
     keywords="zope zope3 z3c.form",
     url='https://github.com/zopefoundation/z3c.formwidget.query',
     zip_safe=False,
@@ -21,7 +21,7 @@ setup(
     include_package_data=True,
     package_dir={'': 'src'},
     namespace_packages=['z3c', 'z3c.formwidget'],
-    python_requires='>=3.7',
+    python_requires='>=3.9',
     extras_require=dict(
         test=[
             'lxml',
@@ -47,11 +47,11 @@ setup(
         ' License (LGPL)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     entry_points='''
