@@ -8,18 +8,6 @@ Changelog
 
 - Drop support for Python 3.7, 3.8.
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
-
 
 2.0.0 (2023-04-27)
 ------------------
