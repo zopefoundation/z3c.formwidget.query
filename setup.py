@@ -1,5 +1,4 @@
 #!python
-from setuptools import find_packages
 from setuptools import setup
 
 
@@ -17,17 +16,14 @@ setup(
     keywords="zope zope3 z3c.form",
     url='https://github.com/zopefoundation/z3c.formwidget.query',
     zip_safe=False,
-    packages=find_packages('src'),
     include_package_data=True,
-    package_dir={'': 'src'},
-    namespace_packages=['z3c', 'z3c.formwidget'],
     python_requires='>=3.9',
     extras_require=dict(
         test=[
             'lxml',
             'z3c.form [test]',
             'zope.testing',
-            'zope.testrunner',
+            'zope.testrunner >= 6.4',
         ]),
     install_requires=[
         'setuptools',
