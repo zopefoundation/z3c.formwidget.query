@@ -3,55 +3,50 @@ from setuptools import setup
 
 
 setup(
-    name='z3c.formwidget.query',
-    version='3.1.dev0',
+    name="z3c.formwidget.query",
+    version="3.1.dev0",
     author="Zope Community",
     author_email="zope-dev@zope.dev",
     description="A source query widget for z3c.form.",
     long_description=(
-        open('README.rst').read() + '\n\n' +
-        open('CHANGES.rst').read()
-    ),
+        open("README.rst").read() + "\n\n" + open("CHANGES.rst").read()),
     license="ZPL-2.1",
     keywords="zope zope3 z3c.form",
-    url='https://github.com/zopefoundation/z3c.formwidget.query',
+    url="https://github.com/zopefoundation/z3c.formwidget.query",
     zip_safe=False,
     include_package_data=True,
-    python_requires='>=3.9',
+    python_requires=">=3.9",
     extras_require=dict(
         test=[
-            'lxml',
-            'z3c.form [test]',
-            'zope.testing',
-            'zope.testrunner >= 6.4',
-        ]),
+            "lxml",
+            "z3c.form [test]",
+            "zope.testing",
+            "zope.testrunner >= 6.4",
+        ]
+    ),
     install_requires=[
-        'setuptools',
-        'z3c.form>=3.2.10',
-        'zope.interface',
-        'zope.schema',
-        'zope.component',
-        'zope.i18nmessageid',
+        "setuptools",
+        "z3c.form>=3.2.10",
+        "zope.interface",
+        "zope.schema",
+        "zope.component",
+        "zope.i18nmessageid",
     ],
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Environment :: Web Environment',
-        'Framework :: Zope :: 3',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Zope Public License',
-        'License :: OSI Approved :: GNU Library or Lesser General Public'
-        ' License (LGPL)',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
-        'Topic :: Software Development :: Libraries :: Python Modules',
+        "Development Status :: 4 - Beta",
+        "Environment :: Web Environment",
+        "Framework :: Zope :: 3",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: Zope Public License",
+        "License :: OSI Approved :: GNU Library or Lesser General Public"
+        " License (LGPL)",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    entry_points='''
-        [z3c.autoinclude.plugin]
-        target = plone
-    ''',
 )
