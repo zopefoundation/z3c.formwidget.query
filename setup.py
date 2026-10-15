@@ -17,7 +17,7 @@ setup(
     url='https://github.com/zopefoundation/z3c.formwidget.query',
     zip_safe=False,
     include_package_data=True,
-    python_requires='>=3.9',
+    python_requires='>=3.11',
     extras_require=dict(
         test=[
             'lxml',
@@ -39,15 +39,14 @@ setup(
         'Framework :: Zope :: 3',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
-        'License :: OSI Approved :: GNU Library or Lesser General Public'
-        ' License (LGPL)',
+        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
+        'Programming Language :: Python :: 3.15',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     entry_points='''
