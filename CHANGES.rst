@@ -4,7 +4,7 @@ Changelog
 3.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Drop support for Python 3.10, 3.9.
 
 
 3.0 (2025-04-14)
